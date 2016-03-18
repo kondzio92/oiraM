@@ -8,7 +8,7 @@ sqgen:
 	$(CC) $(FLAGS) sq-gen.cpp -o sq-gen sq-gen-cmdline.c $(SFML_LIBS) -lX11
 
 main:
-	$(CC) $(FLAGS) main.cpp -o oiraM $(SFML_LIBS) -lX11
+	$(CC) $(FLAGS) main.cpp ThreadWindow.cpp -o oiraM $(SFML_LIBS) -lX11 -std=c++11
 
 clean:
 	rm -f sq-gen oiraM
