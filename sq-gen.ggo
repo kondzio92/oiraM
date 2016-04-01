@@ -1,0 +1,12 @@
+package "sq-gen"
+version "0.1"
+description "Colored square generator"
+args "--no-handle-error --file-name=sq-gen-cmdline"
+usage "sq-gen [OPTIONS]"
+
+option "width"  w "Width of the result image" int
+option "height" h "Height of the result image" int
+option "output" o "Output file" string typestr="FILE" default="output.bmp" optional
+option "red"    r "Red intensivity" int optional
+option "green"  g "Green intensivity" int optional
+option "blue"   b "Blue intensivity" int optional
