@@ -6,6 +6,9 @@ thread(&ThreadWindow::main, this){
     this->height = h;
     this->title = title;
 
+    start_button = new sf::RectangleShape(sf::Vector2f(90, 90));
+    start_button->setPosition(10,10);
+
     thread.launch();
 }
 
@@ -60,6 +63,31 @@ void ThreadWindow::main(){
         }
 
         window->clear(sf::Color(200,200,219,255));
+        if(shared->game_state == 1){
+            for(Object o :  shared->objects){
+                if(o.create){
+                    o.create = false;
+                    switch(o.type){
+                        case 1:
+                            o.sprite.setTexture(player_tex);
+                            break;
+                        case 2:
+                            o.sprite.setTexture(grass_tex);
+                            break;
+                        case 3:
+                            o.sprite.setTexture(rock_tex);
+                            break;
+                        case 4:
+                            o.sprite.setTexture(sky_tex);
+                            break;
+                    }
+                }
+                window->draw(o.sprite);
+            } 
+        }else if(shared->game_state == 2){
+            window->draw(*start_button);
+        }
+        
 
         window->display();
     }

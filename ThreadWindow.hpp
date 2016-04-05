@@ -6,7 +6,7 @@
 #include <iostream>
 #include <list>
 #include <string.h>
-#include "defines.h"
+#include "headers.h"
 #ifdef __linux__
 #include <X11/Xlib.h>
 #endif
@@ -26,6 +26,8 @@ class ThreadWindow{
         int width, height;
         std::string title;
         Shared *shared;
+        sf::Texture player_tex, grass_tex, rock_tex, sky_tex;
+        sf::RectangleShape *start_button;
 	private:
 
 };
