@@ -13,11 +13,12 @@
 
 class ThreadWindow{
 	public:
-		ThreadWindow(int w, int h, std::string title);
+		ThreadWindow(int w, int h, std::string title, Shared *shared);
 		virtual ~ThreadWindow();
 		void wait();
 		void setShared(Shared *shared);
         bool isOpen();
+        sf::RenderWindow* getWindow();
 
     protected:
     	virtual void main();
@@ -28,6 +29,7 @@ class ThreadWindow{
         Shared *shared;
         sf::Texture player_tex, grass_tex, rock_tex, sky_tex;
         sf::RectangleShape *start_button;
+        bool open= false;
 	private:
 
 };
