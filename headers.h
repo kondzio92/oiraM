@@ -43,15 +43,20 @@ enum Direction{Left, Right};
 class Object{
 	public:
 		Object(unsigned char type){
-			sprite.setOrigin(20,0);
+			sprite.setOrigin(sprite.getLocalBounds().width/2,0);
 			this->type = type;
 			create = true;
 			clock.restart();
 		}
 
+		void setPosition(int x, int y){
+			sprite.setPosition(x, y);
+			position = sf::Vector2f(x, y);
+		}
+
 		void startMoving(Direction dir){
 			clock.restart();
-			start_pos.x = sprite.getPosition().x;
+			start_pos.x = position.x;
 			
 			if (dir == Direction::Left){
 				move |= 1;
@@ -65,7 +70,26 @@ class Object{
 		}
 
 		void stopMoving(){
-			move &= ~3;
+			if((move & 3) !=0){
+				move &= ~3;
+				start_pos.x = position.x;
+			}
+		}
+
+		void startFalling(){
+			falling_clock.restart();
+			start_pos.y = position.y;
+			move |= 8;
+		}
+
+		void resetFalling(){
+			falling_clock.restart();
+			start_pos.y = position.y;
+		}
+
+		void stopFalling(){
+			move &= ~8;
+			start_pos.y = position.y;
 		}
 
 		void jump(){
@@ -73,47 +97,66 @@ class Object{
 				jump_speed = MAX(speed, MIN_JUMP_SPEED) * 2.0f;
 				if((move & 3) !=0)
 					jump_speed = MAX(speed + MIN(ACCEL * clock.getElapsedTime().asSeconds(), MAX_SPEED - speed), MIN_JUMP_SPEED) * 2.0f;
-	            start_pos.y = sprite.getPosition().y;
+	            start_pos.y = position.y;
 	            jump_clock.restart();
 	            move |= 4;
 			}
 		}
 
 		void execute(){
-			last_pos = sprite.getPosition();
+			last_pos = position;
+			way_diff = sf::Vector2f(0,0);
 			if((move & 1) != 0){
 				sec = clock.getElapsedTime().asSeconds();
-				way_diff = -(speed + ACCEL * MIN(sec, MAX_SPEED/ACCEL)) * sec; /* s = vt + (at^2)/2  ->  s = (t + at/2) * t,  where ACCEL = a/2 v */	
+				way_diff.x = -(speed + ACCEL * MIN(sec, MAX_SPEED/ACCEL)) * sec; /* s = vt + (at^2)/2  ->  s = (t + at/2) * t,  where ACCEL = a/2 v */	
 			}else if((move & 2) != 0){
 				sec = clock.getElapsedTime().asSeconds();
-				way_diff = (speed + ACCEL * MIN(sec, MAX_SPEED/ACCEL)) * sec; /* s = vt + (at^2)/2  ->  s = (t + at/2) * t,  where ACCEL = a/2 v */
+				way_diff.x = (speed + ACCEL * MIN(sec, MAX_SPEED/ACCEL)) * sec; /* s = vt + (at^2)/2  ->  s = (t + at/2) * t,  where ACCEL = a/2 v */
 			}
 
-			if((move & 3) != 0){
-				sprite.setPosition(start_pos.x + way_diff, sprite.getPosition().y);
-                if(sprite.getPosition().x < 0.0f)
-                    sprite.setPosition(0.0f, sprite.getPosition().y);
-                if(sprite.getPosition().x > 800)
-                    sprite.setPosition(800, sprite.getPosition().y);
-            }
-
-            if((move & 4) != 0){
+           if((move & 4) != 0){
             	sec = jump_clock.getElapsedTime().asSeconds();
-				way_diff = jump_speed * sec - G_ACCEL * sec * sec;
-				sprite.setPosition(sprite.getPosition().x, start_pos.y - way_diff); /* Y axis is inverted in the computer */
-
-				if(sprite.getPosition().y > PLAYER_POSITION_Y) {
-                	sprite.setPosition(sprite.getPosition().x, PLAYER_POSITION_Y);
-                	move &= ~4;
-           		}
+				way_diff.y -= jump_speed * sec;
 			}
 
+			if((move & 8) != 0){
+				sec = falling_clock.getElapsedTime().asSeconds();
+				way_diff.y += G_ACCEL * sec * sec;
+			}
+			position = start_pos + way_diff;
+			
+            if(position.x < 0.0f)
+                position.x = 0.0f;
+            if(position.x > 800)
+                position.x = 800;
 		}
 
 		bool colision(Object *o){
-			if(abs(o->sprite.getPosition().x-sprite.getPosition().x)<SIZE &&
-				abs(o->sprite.getPosition().y-sprite.getPosition().y)<SIZE)
+			float w = sprite.getGlobalBounds().width;
+			float h = sprite.getGlobalBounds().height;
+			float w1 = o->sprite.getGlobalBounds().width;
+			float h1 = o->sprite.getGlobalBounds().height;
+
+			if(fabs(o->position.x-position.x)<=w1/2+w/2 &&
+				fabs(o->position.y-position.y)<=h1/2+h/2){
+				float m1 = MIN(position.x+w/2, o->position.x+w1/2)-MAX(position.x-w/2, o->position.x-w1/2);
+				float m2 = MIN(position.y+h/2, o->position.y+h1/2) -MAX(position.y-h/2, o->position.y-h1/2);
+				if(m1<0.5 && m2<0.5)
+					return false;
+				float a, b;
+				if(m1 > m2){
+					position.y = o->position.y + (position.y>o->position.y?1:-1) * (h1/2 + h/2);
+				}else{
+					position.x = o->position.x + (position.x>o->position.x?1:-1) * (w1/2 + w/2 +1);
+					start_pos.x = position.x;
+					clock.restart();					
+				}
+				
+				move &= ~4;
+				resetFalling();
 				return true;
+			}
+				
 			return false;
 
 		}
@@ -123,9 +166,18 @@ class Object{
 			sprite.setPosition(last_pos);
 		}
 
-		float sec, way_diff, speed = MIN_SPEED, jump_speed = -1.0f;
-		sf::Vector2f start_pos, last_pos;
-		sf::Clock clock, jump_clock;
+		void setTexture(sf::Texture &t){
+			sprite.setTexture(t);
+			sprite.setOrigin(t.getSize().x/2, t.getSize().y/2);
+		}
+
+		void update(){
+			sprite.setPosition(position);
+		}
+
+		float sec, speed = MIN_SPEED, jump_speed = -1.0f;
+		sf::Vector2f position, way_diff=sf::Vector2f(0,0), start_pos, last_pos, falling_start_pos;
+		sf::Clock clock, jump_clock, falling_clock;
 		char move = 0;
 		bool create;
 		unsigned char type;
@@ -133,13 +185,8 @@ class Object{
 };
 
 struct Shared{
-	std::vector<Object*> objects;
+	std::vector<Object*> objects, bg_objects, enemys;
 	unsigned char game_state;
-	sf::Vector2i click_pos;
-	bool jumping = false;
-    int direction = 0;
-    unsigned char move = 0;
-    sf::Event event;
 };
 
 #endif
