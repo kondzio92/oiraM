@@ -16,27 +16,28 @@ int main (int argc, char **argv) {
 	char move=0;
 	shared.game_state = 1; // main menu
 	Object player(ObjectType::player);
-	Object przeszkoda(ObjectType::rock);
-	przeszkoda.sprite.setPosition(440, 380);
-	shared.objects.push_back(&przeszkoda);
 	shared.objects.push_back(&player);
-
-	player.sprite.setPosition(PLAYER_POSITION_X, PLAYER_POSITION_Y);
-	//player.sprite.setOrigin(20,0);
+	player.setPosition(PLAYER_POSITION_X, PLAYER_POSITION_Y-100);
+	player.startFalling();
 	for(int i=0 ; i<20 ; i++){
 		for(int j=1 ; j<=4 ; j++){
 			shared.objects.push_back(new Object(ObjectType::rock));
-			shared.objects.back()->sprite.setPosition(i*40+20, 600-j*40);
+			shared.objects.back()->setPosition(i*40+20, 620-j*40);
 		}
 		shared.objects.push_back(new Object(ObjectType::grass));
-		shared.objects.back()->sprite.setPosition(i*40+20, 440);
+		shared.objects.back()->setPosition(i*40+20, 440);
 	}
 	shared.objects.push_back(new Object(ObjectType::rock));
-	shared.objects.back()->sprite.setPosition(400, 420);
+	shared.objects.back()->setPosition(400, 400);
+	shared.objects.push_back(new Object(ObjectType::rock));
+	shared.objects.back()->setPosition(440, 360);
+
+	shared.bg_objects.push_back(new Object(ObjectType::sky));
+	shared.bg_objects.back()->setPosition(380, 390);
+
 	ThreadWindow window(WIDTH, HEIGHT, "oiraM", &shared);
 
 	while(!window.isOpen());
-
 	while(window.isOpen()){
 		if(shared.game_state == 1){		//game
 			if (((move & 1) == 0) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
@@ -65,10 +66,10 @@ int main (int argc, char **argv) {
 			int i = 0;
 			for(Object *o : shared.objects){
 				if(o!=&player){
-					if(player.colision(o))
-						player.backToLastCorrectPosition();
+					player.colision(o);
 				}
 			}
+			player.update();
 
 		}else if(shared.game_state == 2){	// main menu screen
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){

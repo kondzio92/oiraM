@@ -40,9 +40,7 @@ void ThreadWindow::main(){
     XInitThreads();
     #endif
 
-    sf::Event event;// = shared->event;
-    //sf::Clock clock;
-   // sf::Time time = clock.getElapsedTime();
+    sf::Event event;
     window = new sf::RenderWindow(sf::VideoMode(width,height,32), title, sf::Style::Titlebar | sf::Style::Close);
 
     //window->setKeyRepeatEnabled(false);
@@ -55,68 +53,75 @@ void ThreadWindow::main(){
                     open = false;
                     window->close();
                     break;
-                    case sf::Event::KeyPressed:
-                    switch(event.key.code) {
-                        case sf::Keyboard::Left:
-                            shared->move |= 0b1;  ///powrot do bitowego przekazywania kierunku. to co nizej przeniesc do watku glownego
-                            shared->move &= ~0b10;
-                            break;
-                        case sf::Keyboard::Right:
-                            shared->move |= 0b100;
-                            shared->move &= ~0b1000;
-                            break;
-                        case sf::Keyboard::Space:
-                            shared->move |= 0b10000;
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case sf::Event::KeyReleased:
-                    switch(event.key.code) {
-                        case sf::Keyboard::Left:
-                            shared->move |= 0b10;
-                            shared->move &= ~0b1;
-                            break;
-                        case sf::Keyboard::Right:
-                            shared->move |= 0b1000;
-                            shared->move &= ~0b100;
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
                 }
-
         }
 
         window->clear(sf::Color(200,200,219,255));
         if(shared->game_state == 1){
-            for(Object *o :  shared->objects){
+            for(Object *o :  shared->bg_objects){
                 if(o->create){
                     o->create = false;
                     switch(o->type){
                         case ObjectType::player:
-                            o->sprite.setTexture(player_tex);
+                            o->setTexture(player_tex);
                             break;
                         case ObjectType::grass:
-                            o->sprite.setTexture(grass_tex);
+                            o->setTexture(grass_tex);
                             break;
                         case ObjectType::rock:
-                            o->sprite.setTexture(rock_tex);
+                            o->setTexture(rock_tex);
                             break;
                         case ObjectType::sky:
-                            o->sprite.setTexture(sky_tex);
+                            o->setTexture(sky_tex);
                             break;
                     }
                 }
                 window->draw(o->sprite);
             } 
+            for(Object *o :  shared->objects){
+                if(o->create){
+                    o->create = false;
+                    switch(o->type){
+                        case ObjectType::player:
+                            o->setTexture(player_tex);
+                            break;
+                        case ObjectType::grass:
+                            o->setTexture(grass_tex);
+                            break;
+                        case ObjectType::rock:
+                            o->setTexture(rock_tex);
+                            break;
+                        case ObjectType::sky:
+                            o->setTexture(sky_tex);
+                            break;
+                    }
+                }
+                window->draw(o->sprite);
+            }
+            for(Object *o :  shared->enemys){
+                if(o->create){
+                    o->create = false;
+                    switch(o->type){
+                        case ObjectType::player:
+                            o->setTexture(player_tex);
+                            break;
+                        case ObjectType::grass:
+                            o->setTexture(grass_tex);
+                            break;
+                        case ObjectType::rock:
+                            o->setTexture(rock_tex);
+                            break;
+                        case ObjectType::sky:
+                            o->setTexture(sky_tex);
+                            break;
+                    }
+                }
+                window->draw(o->sprite);
+            }
         }else if(shared->game_state == 2){
             window->draw(*start_button);
         }
         
-
         window->display();
     }
 }
