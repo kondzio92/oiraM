@@ -19,6 +19,8 @@ int main (int argc, char **argv) {
 	shared.objects.push_back(&player);
 	player.setPosition(PLAYER_POSITION_X, PLAYER_POSITION_Y-100);
 	player.startFalling();
+	Object castle(ObjectType::castle);
+	castle.setPosition(2000, PLAYER_POSITION_Y-100);
 	for(int i=0 ; i<20 ; i++){
 		for(int j=1 ; j<=4 ; j++){
 			shared.objects.push_back(new Object(ObjectType::rock));
@@ -27,13 +29,15 @@ int main (int argc, char **argv) {
 		shared.objects.push_back(new Object(ObjectType::grass));
 		shared.objects.back()->setPosition(i*40+20, 440);
 	}
+	Object klocek(ObjectType::rock);
 	shared.objects.push_back(new Object(ObjectType::rock));
 	shared.objects.back()->setPosition(400, 400);
-	shared.objects.push_back(new Object(ObjectType::rock));
+	shared.objects.push_back(&klocek);
 	shared.objects.back()->setPosition(440, 360);
 
 	shared.bg_objects.push_back(new Object(ObjectType::sky));
 	shared.bg_objects.back()->setPosition(380, 390);
+	//shared.bg_objects.push_back(&castle);
 
 	ThreadWindow window(WIDTH, HEIGHT, "oiraM", &shared);
 
@@ -50,6 +54,7 @@ int main (int argc, char **argv) {
 			if (((move & 2) == 0) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){   
                     move |= 2;
                     player.startMoving(Right);
+                    klocek.startFalling();
 			}else if(!sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
 				move &= ~2;
 			}
@@ -58,17 +63,27 @@ int main (int argc, char **argv) {
 				player.stopMoving();
 			}
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+			if (/*((move & 4) == 0 ) && */sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+				std::cout<< int(move)<<std::endl;
+				move |= 4;
 				player.jump();
-			}
+			}/*else if(!sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+				move &= ~4;
+			}*/
 
 			player.execute();
+			klocek.execute();
 			int i = 0;
 			for(Object *o : shared.objects){
 				if(o!=&player){
 					player.colision(o);
+
+				}
+				if(o!=&klocek){
+					klocek.colision(o);
 				}
 			}
+			klocek.update();
 			player.update();
 
 		}else if(shared.game_state == 2){	// main menu screen
