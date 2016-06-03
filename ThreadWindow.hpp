@@ -3,7 +3,6 @@
 
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include <list>
 #include <string.h>
 #include "headers.h"
