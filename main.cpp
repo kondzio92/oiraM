@@ -19,33 +19,11 @@ int main (int argc, char **argv) {
     #endif
 	Shared shared;
 	Object player(ObjectType::player);
+	player.startFalling();
 	shared.objects.push_back(&player);
 	loadWorld("map",&player, shared.objects, shared.bg_objects, shared.enemys);
 	char move=0;
 	shared.game_state = 1; // start screen - main menu or game
-	
-	
-	player.startFalling();
-	/*Object castle(ObjectType::castle);
-	castle.setPosition(130, PLAYER_POSITION_Y-105);
-	for(int i=0 ; i<20 ; i++){
-		for(int j=1 ; j<=4 ; j++){
-			shared.objects.push_back(new Object(ObjectType::rock));
-			shared.objects.back()->setPosition(i*40+20, 620-j*40);
-		}
-		shared.objects.push_back(new Object(ObjectType::grass));
-		shared.objects.back()->setPosition(i*40+20, 440);
-	}
-	
-	shared.objects.push_back(new Object(ObjectType::rock));
-	shared.objects.back()->setPosition(400, 400);
-	shared.objects.push_back(new Object(ObjectType::rock));
-	shared.objects.back()->setPosition(440, 360);
-
-	shared.bg_objects.push_back(&castle);
-	shared.bg_objects.push_back(new Object(ObjectType::sky));
-	shared.bg_objects.back()->setPosition(350, 350);
-	*/
 
 	ThreadWindow window(WIDTH, HEIGHT, "oiraM", &shared);
 
@@ -80,7 +58,6 @@ int main (int argc, char **argv) {
 			for(Object *o : shared.objects){
 				if(o!=&player){
 					player.colision(o);
-
 				}
 			}
 			player.update();
@@ -103,7 +80,6 @@ void loadWorld(std::string filename, Object *player, std::vector<Object*> &objec
 	std::ifstream file(filename);
 
 	if(file.is_open()){
-		//char c;
 		std::string str;
 		int x=780, y=0;
 		while(std::getline(file, str)){
@@ -132,7 +108,6 @@ void loadWorld(std::string filename, Object *player, std::vector<Object*> &objec
 			}
 			x-=40;
 			std::cout<<std::endl;
-			
 		}
 	}else{
 		fprintf(stderr, "ERROR: Cannot load file world");
