@@ -69,7 +69,7 @@ int main (int argc, char **argv) {
 			}
 
 			player.execute();
-			int i = 0;
+
 			for(Object *o : shared.objects){
 				if(o!=&player){
 					player.colision(o);
