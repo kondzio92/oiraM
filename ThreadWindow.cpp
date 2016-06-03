@@ -26,6 +26,10 @@ thread(&ThreadWindow::main, this){
         fprintf(stderr, "ERROR: Cannot load '%s' image\n", SKY_PATH);
         exit(-1);
     }
+    if(!sky_tex.loadFromFile(CASTLE_PATH)) {
+        fprintf(stderr, "ERROR: Cannot load '%s' image\n", CASTLE_PATH);
+        exit(-1);
+    }
     
     thread.launch();
 }
@@ -74,6 +78,9 @@ void ThreadWindow::main(){
                         case ObjectType::sky:
                             o->setTexture(sky_tex);
                             break;
+                        case ObjectType::castle:
+                            o->setTexture(castle_tex);
+                            break;
                     }
                 }
                 window->draw(o->sprite);
@@ -94,6 +101,9 @@ void ThreadWindow::main(){
                         case ObjectType::sky:
                             o->setTexture(sky_tex);
                             break;
+                        case ObjectType::castle:
+                            o->setTexture(castle_tex);
+                            break;
                     }
                 }
                 window->draw(o->sprite);
@@ -113,6 +123,9 @@ void ThreadWindow::main(){
                             break;
                         case ObjectType::sky:
                             o->setTexture(sky_tex);
+                            break;
+                        case ObjectType::castle:
+                            o->setTexture(castle_tex);
                             break;
                     }
                 }

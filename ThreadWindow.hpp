@@ -27,7 +27,7 @@ class ThreadWindow{
         int width, height;
         std::string title;
         Shared *shared;
-        sf::Texture player_tex, grass_tex, rock_tex, sky_tex;
+        sf::Texture player_tex, grass_tex, rock_tex, sky_tex, castle_tex;
         sf::RectangleShape *start_button;
         bool open= false;
 	private:

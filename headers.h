@@ -24,6 +24,7 @@
 #define GRASS_PATH      IMAGES_PREFIX "grass-" SIZE_STR ".bmp"
 #define ROCK_PATH       IMAGES_PREFIX "rock-" SIZE_STR ".png"
 #define SKY_PATH        IMAGES_PREFIX "sky-" SIZE_STR ".bmp"
+#define CASTLE_PATH     IMAGES_PREFIX "castle-" SIZE_STR ".png"
 
 #define NONE            0
 #define LEFT            1
@@ -38,7 +39,7 @@ static bool float_is_equal (float a, float b) {
     return std::abs(a - b) <= 0.00001f;
 } /* float_is_different */
 
-enum ObjectType{player, grass, rock, sky};
+enum ObjectType{player, grass, rock, sky, castle};
 enum Direction{Left, Right};
 class Object{
 	public:
@@ -93,7 +94,10 @@ class Object{
 		}
 
 		void jump(){
+			std::cout<<"jumping"<<std::endl;
+			std::cout<<int(move)<<std::endl;
 			if((move & 4) == 0){
+				std::cout<<"inside jump"<<std::endl;
 				jump_speed = MAX(speed, MIN_JUMP_SPEED) * 2.0f;
 				if((move & 3) !=0)
 					jump_speed = MAX(speed + MIN(ACCEL * clock.getElapsedTime().asSeconds(), MAX_SPEED - speed), MIN_JUMP_SPEED) * 2.0f;
@@ -141,7 +145,7 @@ class Object{
 				fabs(o->position.y-position.y)<=h1/2+h/2){
 				float m1 = MIN(position.x+w/2, o->position.x+w1/2)-MAX(position.x-w/2, o->position.x-w1/2);
 				float m2 = MIN(position.y+h/2, o->position.y+h1/2) -MAX(position.y-h/2, o->position.y-h1/2);
-				if(m1<0.5 && m2<0.5)
+				if(m1<1 && m2<1)
 					return false;
 				float a, b;
 				if(m1 > m2){
@@ -173,6 +177,7 @@ class Object{
 
 		void update(){
 			sprite.setPosition(position);
+			std::cout << position.x << "\t" << position.y<<std::endl;
 		}
 
 		float sec, speed = MIN_SPEED, jump_speed = -1.0f;
