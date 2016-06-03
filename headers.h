@@ -177,6 +177,10 @@ class Object{
 			sprite.setPosition(position);
 		}
 
+		sf::FloatRect getSize(){
+			return sprite.getGlobalBounds();
+		}
+
 		float sec, speed = MIN_SPEED, jump_speed = -1.0f;
 		sf::Vector2f position, way_diff=sf::Vector2f(0,0), start_pos, last_pos, falling_start_pos;
 		sf::Clock clock, jump_clock, falling_clock;

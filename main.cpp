@@ -3,23 +3,30 @@
 #include <cstring> 
 #include <cmath>
 #include <cerrno>
+#include <fstream>
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include "headers.h"
 #include "ThreadWindow.hpp"
+#include <iostream>
+#include <vector>
+
+void loadWorld(std::string filename, Object *player, std::vector<Object*> &objects, std::vector<Object*> &bg, std::vector<Object*> &animated);
 
 int main (int argc, char **argv) {
 	#ifdef __linux__
     XInitThreads();
     #endif
 	Shared shared;
-	char move=0;
-	shared.game_state = 1; // start screen - main menu or game
 	Object player(ObjectType::player);
 	shared.objects.push_back(&player);
-	player.setPosition(PLAYER_POSITION_X, PLAYER_POSITION_Y-100);
+	loadWorld("map",&player, shared.objects, shared.bg_objects, shared.enemys);
+	char move=0;
+	shared.game_state = 1; // start screen - main menu or game
+	
+	
 	player.startFalling();
-	Object castle(ObjectType::castle);
+	/*Object castle(ObjectType::castle);
 	castle.setPosition(130, PLAYER_POSITION_Y-105);
 	for(int i=0 ; i<20 ; i++){
 		for(int j=1 ; j<=4 ; j++){
@@ -38,7 +45,7 @@ int main (int argc, char **argv) {
 	shared.bg_objects.push_back(&castle);
 	shared.bg_objects.push_back(new Object(ObjectType::sky));
 	shared.bg_objects.back()->setPosition(350, 350);
-	
+	*/
 
 	ThreadWindow window(WIDTH, HEIGHT, "oiraM", &shared);
 
@@ -92,3 +99,40 @@ int main (int argc, char **argv) {
     return 0;
 }
 
+void loadWorld(std::string filename, Object *player, std::vector<Object*> &objects, std::vector<Object*> &bg, std::vector<Object*> &animated){
+	std::ifstream file(filename);
+
+	if(file.is_open()){
+		//char c;
+		std::string str;
+		int x=780, y=0;
+		while(std::getline(file, str)){
+			y=20;
+			std::cout<<str<<std::endl;
+			for(char  &c: str){
+				std::cout<<x<<"\t"<<y<<std::endl;
+				switch(c){
+					case 'x':
+						objects.push_back(new Object(ObjectType::rock));
+						objects.back()->setPosition(x, y);
+						break;
+					case 'P':
+						player->setPosition(x, y);
+						break;
+					case 'C':
+						bg.push_back(new Object(ObjectType::sky));
+						bg.back()->setPosition(x, y);
+						break;
+				}
+				y+=40;
+			}
+			x-=40;
+			std::cout<<std::endl;
+			
+		}
+	}else{
+		fprintf(stderr, "ERROR: Cannot load file world");
+        exit(-1);
+	}
+	file.close();
+}
