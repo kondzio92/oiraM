@@ -145,7 +145,7 @@ class Object{
 				float m2 = MIN(position.y+h/2, o->position.y+h1/2) -MAX(position.y-h/2, o->position.y-h1/2);
 				if(m1<1 && m2<1)
 					return false;
-				float a, b;
+
 				if(m1 > m2){
 					position.y = o->position.y + (position.y>o->position.y?1:-1) * (h1/2 + h/2);
 				}else{
