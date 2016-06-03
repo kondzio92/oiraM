@@ -112,7 +112,7 @@ void loadWorld(std::string filename, Object *player, std::vector<Object*> &objec
 			for(char  &c: str){
 				std::cout<<x<<"\t"<<y<<std::endl;
 				switch(c){
-					case 'x':
+					case 'X':
 						objects.push_back(new Object(ObjectType::rock));
 						objects.back()->setPosition(x, y);
 						break;
@@ -122,6 +122,10 @@ void loadWorld(std::string filename, Object *player, std::vector<Object*> &objec
 					case 'C':
 						bg.push_back(new Object(ObjectType::sky));
 						bg.back()->setPosition(x, y);
+						break;
+					case 'G':
+						objects.push_back(new Object(ObjectType::grass));
+						objects.back()->setPosition(x, y);
 						break;
 				}
 				y+=40;
