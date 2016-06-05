@@ -11,26 +11,24 @@
 #endif
 
 class ThreadWindow{
-	public:
-		ThreadWindow(int w, int h, std::string title, Shared *shared);
-		virtual ~ThreadWindow();
-		void wait();
-		void setShared(Shared *shared);
+    public:
+        ThreadWindow(int width, int height, std::string title, Shared *shared);
+        virtual ~ThreadWindow();
+        void wait();
+        void setShared(Shared *shared);
         bool isOpen();
         sf::RenderWindow* getWindow();
 
     protected:
-    	virtual void main();
-        sf::Thread thread;
-        sf::RenderWindow *window;
+        virtual void main();
+        bool open = false;
         int width, height;
         std::string title;
-        Shared *shared;
+        sf::Thread thread;
+        sf::RenderWindow *window;
         sf::Texture player_tex, grass_tex, rock_tex, sky_tex, castle_tex;
         sf::RectangleShape *start_button;
-        bool open= false;
-	private:
-
+        Shared *shared;
 };
 
 #endif

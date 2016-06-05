@@ -18,7 +18,7 @@ int main (int argc, char **argv) {
     XInitThreads();
     #endif
 	Shared shared;
-	Object player(ObjectType::player);
+	Object player(ObjectType::Player);
 	player.startFalling();
 	shared.objects.push_back(&player);
 	loadWorld("map",&player, shared.objects, shared.bg_objects, shared.enemys);
@@ -89,18 +89,18 @@ void loadWorld(std::string filename, Object *player, std::vector<Object*> &objec
 				std::cout<<x<<"\t"<<y<<std::endl;
 				switch(c){
 					case 'X':
-						objects.push_back(new Object(ObjectType::rock));
+						objects.push_back(new Object(ObjectType::Rock));
 						objects.back()->setPosition(x, y);
 						break;
 					case 'P':
 						player->setPosition(x, y);
 						break;
 					case 'C':
-						bg.push_back(new Object(ObjectType::sky));
+						bg.push_back(new Object(ObjectType::Sky));
 						bg.back()->setPosition(x, y);
 						break;
 					case 'G':
-						objects.push_back(new Object(ObjectType::grass));
+						objects.push_back(new Object(ObjectType::Grass));
 						objects.back()->setPosition(x, y);
 						break;
 				}
