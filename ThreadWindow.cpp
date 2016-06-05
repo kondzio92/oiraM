@@ -1,38 +1,38 @@
 #include "ThreadWindow.hpp"
 
 ThreadWindow::ThreadWindow(int w, int h, std::string title, Shared *shared):
-thread(&ThreadWindow::main, this){
-    this->width = w;
-    this->height = h;
-    this->title = title;
-    this->shared = shared;
+    thread(&ThreadWindow::main, this){
+        this->width = w;
+        this->height = h;
+        this->title = title;
+        this->shared = shared;
 
-    start_button = new sf::RectangleShape(sf::Vector2f(90, 90));
-    start_button->setPosition(10,10);
+        start_button = new sf::RectangleShape(sf::Vector2f(90, 90));
+        start_button->setPosition(10,10);
 
-    if(!player_tex.loadFromFile(PLAYER_PATH)) {
-        fprintf(stderr, "ERROR: Cannot load '%s' image\n", PLAYER_PATH);
-        exit(-1);
+        if(!player_tex.loadFromFile(PLAYER_PATH)) {
+            fprintf(stderr, "ERROR: Cannot load '%s' image\n", PLAYER_PATH);
+            exit(-1);
+        }
+        if(!grass_tex.loadFromFile(GRASS_PATH)) {
+            fprintf(stderr, "ERROR: Cannot load '%s' image\n", GRASS_PATH);
+            exit(-1);
+        }
+        if(!rock_tex.loadFromFile(ROCK_PATH)) {
+            fprintf(stderr, "ERROR: Cannot load '%s' image\n", ROCK_PATH);
+            exit(-1);
+        }
+        if(!sky_tex.loadFromFile(SKY_PATH)) {
+            fprintf(stderr, "ERROR: Cannot load '%s' image\n", SKY_PATH);
+            exit(-1);
+        }
+        if(!castle_tex.loadFromFile(CASTLE_PATH)) {
+            fprintf(stderr, "ERROR: Cannot load '%s' image\n", CASTLE_PATH);
+            exit(-1);
+        }
+
+        thread.launch();
     }
-    if(!grass_tex.loadFromFile(GRASS_PATH)) {
-        fprintf(stderr, "ERROR: Cannot load '%s' image\n", GRASS_PATH);
-        exit(-1);
-    }
-    if(!rock_tex.loadFromFile(ROCK_PATH)) {
-        fprintf(stderr, "ERROR: Cannot load '%s' image\n", ROCK_PATH);
-        exit(-1);
-    }
-    if(!sky_tex.loadFromFile(SKY_PATH)) {
-        fprintf(stderr, "ERROR: Cannot load '%s' image\n", SKY_PATH);
-        exit(-1);
-    }
-    if(!castle_tex.loadFromFile(CASTLE_PATH)) {
-        fprintf(stderr, "ERROR: Cannot load '%s' image\n", CASTLE_PATH);
-        exit(-1);
-    }
-    
-    thread.launch();
-}
 
 ThreadWindow::~ThreadWindow()
 {
@@ -40,9 +40,9 @@ ThreadWindow::~ThreadWindow()
 }
 
 void ThreadWindow::main(){
-    #ifdef __linux__
+#ifdef __linux__
     XInitThreads();
-    #endif
+#endif
 
     sf::Event event;
     window = new sf::RenderWindow(sf::VideoMode(width,height,32), title, sf::Style::Titlebar | sf::Style::Close);
@@ -135,7 +135,7 @@ void ThreadWindow::main(){
         }else if(shared->game_state == 2){
             window->draw(*start_button);
         }
-        
+
         window->display();
     }
 }
