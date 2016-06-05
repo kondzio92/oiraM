@@ -51,23 +51,23 @@ int main (int argc, char **argv) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
                 move |= 4;
                 player.jump();
-			}else{
-				player.enableJump();
+            }else{
+                player.enableJump();
             }
 
             player.execute();
 
-			bool on_floor = false;
+            bool on_floor = false;
             for(Object *o : shared.objects){
                 if(o!=&player){
-					if((player.colision(o) & 4) !=0)
-						on_floor = true;
+                    if((player.colision(o) & 4) !=0)
+                        on_floor = true;
                 }
             }
-			if(on_floor)
-				player.enableJump();
-			else
-				player.disableJump();
+            if(on_floor)
+                player.enableJump();
+            else
+                player.disableJump();
             player.update();
 
         }else if(shared.game_state == 2){	// main menu screen
@@ -91,7 +91,7 @@ void loadWorld(std::string filename, Object *player, std::vector<Object*> &objec
         std::string str;
         int x=780, y=0;
         while(std::getline(file, str)){
-			y=0;
+            y=0;
             for(char  &c: str){
                 switch(c){
                     case 'X':
