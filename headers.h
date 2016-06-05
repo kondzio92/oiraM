@@ -27,15 +27,22 @@
 #define SKY_PATH        IMAGES_PREFIX "sky-" SIZE_STR ".bmp"
 #define CASTLE_PATH     IMAGES_PREFIX "castle.png"
 
-#define NONE            0
-#define LEFT            1
-#define RIGHT           2
-
 #define MIN(a,b) ((a)<(b)?(a):(b))
 #define MAX(a,b) ((a)>(b)?(a):(b))
 
-enum ObjectType{player, grass, rock, sky, castle};
-enum Direction{Left, Right};
+enum ObjectType{
+    Player,
+    Grass,
+    Rock,
+    Sky,
+    Castle
+};
+
+enum Direction{
+    Left,
+    Right
+};
+
 class Object{
 	public:
 		Object(unsigned char type){

@@ -2,7 +2,7 @@
 
 ThreadWindow::ThreadWindow(int w, int h, std::string title, Shared *shared):
 thread(&ThreadWindow::main, this){
-	this->width = w;
+    this->width = w;
     this->height = h;
     this->title = title;
     this->shared = shared;
@@ -67,19 +67,19 @@ void ThreadWindow::main(){
                 if(o->create){
                     o->create = false;
                     switch(o->type){
-                        case ObjectType::player:
+                        case ObjectType::Player:
                             o->setTexture(player_tex);
                             break;
-                        case ObjectType::grass:
+                        case ObjectType::Grass:
                             o->setTexture(grass_tex);
                             break;
-                        case ObjectType::rock:
+                        case ObjectType::Rock:
                             o->setTexture(rock_tex);
                             break;
-                        case ObjectType::sky:
+                        case ObjectType::Sky:
                             o->setTexture(sky_tex);
                             break;
-                        case ObjectType::castle:
+                        case ObjectType::Castle:
                             o->setTexture(castle_tex);
                             break;
                     }
@@ -90,19 +90,19 @@ void ThreadWindow::main(){
                 if(o->create){
                     o->create = false;
                     switch(o->type){
-                        case ObjectType::player:
+                        case ObjectType::Player:
                             o->setTexture(player_tex);
                             break;
-                        case ObjectType::grass:
+                        case ObjectType::Grass:
                             o->setTexture(grass_tex);
                             break;
-                        case ObjectType::rock:
+                        case ObjectType::Rock:
                             o->setTexture(rock_tex);
                             break;
-                        case ObjectType::sky:
+                        case ObjectType::Sky:
                             o->setTexture(sky_tex);
                             break;
-                        case ObjectType::castle:
+                        case ObjectType::Castle:
                             o->setTexture(castle_tex);
                             break;
                     }
@@ -113,19 +113,19 @@ void ThreadWindow::main(){
                 if(o->create){
                     o->create = false;
                     switch(o->type){
-                        case ObjectType::player:
+                        case ObjectType::Player:
                             o->setTexture(player_tex);
                             break;
-                        case ObjectType::grass:
+                        case ObjectType::Grass:
                             o->setTexture(grass_tex);
                             break;
-                        case ObjectType::rock:
+                        case ObjectType::Rock:
                             o->setTexture(rock_tex);
                             break;
-                        case ObjectType::sky:
+                        case ObjectType::Sky:
                             o->setTexture(sky_tex);
                             break;
-                        case ObjectType::castle:
+                        case ObjectType::Castle:
                             o->setTexture(castle_tex);
                             break;
                     }
