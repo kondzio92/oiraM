@@ -57,7 +57,8 @@ void ThreadWindow::main(){
                     open = false;
                     window->close();
                     break;
-                }
+                default: break;
+            }
         }
 
         window->clear(sf::Color(200,200,219,255));
