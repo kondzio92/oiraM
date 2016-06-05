@@ -51,15 +51,23 @@ int main (int argc, char **argv) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
 				move |= 4;
 				player.jump();
+			}else{
+				player.enableJump();
 			}
 
 			player.execute();
 
+			bool on_floor = false;
 			for(Object *o : shared.objects){
 				if(o!=&player){
-					player.colision(o);
+					if((player.colision(o) & 4) !=0)
+						on_floor = true;
 				}
 			}
+			if(on_floor)
+				player.enableJump();
+			else
+				player.disableJump();
 			player.update();
 
 		}else if(shared.game_state == 2){	// main menu screen
@@ -83,10 +91,8 @@ void loadWorld(std::string filename, Object *player, std::vector<Object*> &objec
 		std::string str;
 		int x=780, y=0;
 		while(std::getline(file, str)){
-			y=20;
-			std::cout<<str<<std::endl;
+			y=0;
 			for(char  &c: str){
-				std::cout<<x<<"\t"<<y<<std::endl;
 				switch(c){
 					case 'X':
 						objects.push_back(new Object(ObjectType::Rock));
@@ -107,7 +113,6 @@ void loadWorld(std::string filename, Object *player, std::vector<Object*> &objec
 				y+=40;
 			}
 			x-=40;
-			std::cout<<std::endl;
 		}
 	}else{
 		fprintf(stderr, "ERROR: Cannot load file world");

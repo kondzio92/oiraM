@@ -11,7 +11,7 @@
 #define PLAYER_POSITION_Y (HEIGHT-(ROCK_HEIGHT+1)*SIZE)
 #define MIN_SPEED       100.0f
 #define MAX_SPEED       400.0f
-#define ACCEL           200.0f
+#define ACCEL           600.0f
 #define G_ACCEL         1000.0f /* gravity acceleration */
 #define CUT_SPEED       200.0f /* how much to slow down on direction change */
 #define MIN_JUMP_SPEED  250.0f
@@ -53,8 +53,8 @@ class Object{
 		}
 
 		void setPosition(int x, int y){
-			sprite.setPosition(x, y);
-			position = sf::Vector2f(x, y);
+			sprite.setPosition(x, y-sprite.getGlobalBounds().height/2);
+			position = sf::Vector2f(x, y-sprite.getGlobalBounds().height/2);
 			clock.restart();
 			start_pos.x = position.x;
 		}
@@ -64,10 +64,18 @@ class Object{
 			start_pos.x = position.x;
 			
 			if (dir == Direction::Left){
+				if((move & 2) != 0){
+					speed = MAX(speed + ACCEL * MIN(clock.getElapsedTime().asSeconds(), MAX_SPEED/ACCEL) - CUT_SPEED, MIN_SPEED);
+					start_pos.x = position.x;
+				}
 				move |= 1;
 				move &= ~2;
 				sprite.setScale(1,1);
             }else if(dir == Direction::Right){
+            	if((move & 1) != 0){
+					speed = MAX(speed + ACCEL * MIN(clock.getElapsedTime().asSeconds(), MAX_SPEED/ACCEL) - CUT_SPEED, MIN_SPEED);
+					start_pos.x = position.x;
+            	}
             	move |= 2;
 				move &= ~1;
 				sprite.setScale(-1,1);
@@ -84,7 +92,7 @@ class Object{
 		void startFalling(){
 			falling_clock.restart();
 			start_pos.y = position.y;
-			move |= 8;
+			move |= 16;
 		}
 
 		void resetFalling(){
@@ -93,19 +101,28 @@ class Object{
 		}
 
 		void stopFalling(){
-			move &= ~8;
+			move &= ~16;
 			start_pos.y = position.y;
 		}
 
 		void jump(){
-			if((move & 4) == 0){
-				jump_speed = MAX(speed, MIN_JUMP_SPEED) * 2.0f;
+			if((move & 4) == 0 && (move & 8) == 0){	// 4 is for jumping, 8 lock for jump
+				jump_speed = MAX(MIN_SPEED, MIN_JUMP_SPEED) * 2.0f;
 				if((move & 3) !=0)
-					jump_speed = MAX(speed + MIN(ACCEL * clock.getElapsedTime().asSeconds(), MAX_SPEED - speed), MIN_JUMP_SPEED) * 2.0f;
+					jump_speed = MAX(MIN_SPEED + MIN(ACCEL * clock.getElapsedTime().asSeconds(), MAX_SPEED - MIN_SPEED), MIN_JUMP_SPEED) * 2.0f;
 	            start_pos.y = position.y;
 	            jump_clock.restart();
 	            move |= 4;
+	            move |= 8;
 			}
+		}
+
+		void disableJump(){
+			move |= 8;
+		}
+
+		void enableJump(){
+			move &= ~8;
 		}
 
 		void execute(){
@@ -113,9 +130,11 @@ class Object{
 			way_diff = sf::Vector2f(0,0);
 			if((move & 1) != 0){
 				sec = clock.getElapsedTime().asSeconds();
+				//speed = MAX(speed + ACCEL * MIN(clock.getElapsedTime().asSeconds(), MAX_SPEED/ACCEL) - CUT_SPEED, MIN_SPEED);
 				way_diff.x = -(speed + ACCEL * MIN(sec, MAX_SPEED/ACCEL)) * sec; /* s = vt + (at^2)/2  ->  s = (t + at/2) * t,  where ACCEL = a/2 v */	
 			}else if((move & 2) != 0){
 				sec = clock.getElapsedTime().asSeconds();
+				//speed = MAX(speed + ACCEL * MIN(clock.getElapsedTime().asSeconds(), MAX_SPEED/ACCEL) - CUT_SPEED, MIN_SPEED);
 				way_diff.x = (speed + ACCEL * MIN(sec, MAX_SPEED/ACCEL)) * sec; /* s = vt + (at^2)/2  ->  s = (t + at/2) * t,  where ACCEL = a/2 v */
 			}
 
@@ -124,7 +143,7 @@ class Object{
 				way_diff.y -= jump_speed * sec;
 			}
 
-			if((move & 8) != 0){
+			if((move & 16) != 0){
 				sec = falling_clock.getElapsedTime().asSeconds();
 				way_diff.y += G_ACCEL * sec * sec;
 			}
@@ -136,33 +155,46 @@ class Object{
                 position.x = 800;
 		}
 
-		bool colision(Object *o){
+		int colision(Object *o){
 			float w = sprite.getGlobalBounds().width;
 			float h = sprite.getGlobalBounds().height;
 			float w1 = o->sprite.getGlobalBounds().width;
 			float h1 = o->sprite.getGlobalBounds().height;
 
-			if(fabs(o->position.x-position.x)<=w1/2+w/2 &&
+			if(fabs(o->position.x-position.x)<=w1/2+w/2 && //in x ang y objects are closer than their size
 				fabs(o->position.y-position.y)<=h1/2+h/2){
 				float m1 = MIN(position.x+w/2, o->position.x+w1/2)-MAX(position.x-w/2, o->position.x-w1/2);
 				float m2 = MIN(position.y+h/2, o->position.y+h1/2) -MAX(position.y-h/2, o->position.y-h1/2);
-				if(m1<1 && m2<1)
-					return false;
+				//m1- dlugosc krawedzi x prostokata przeciecia 
+				//m2- dlugosc krawedzi y prostokata przeciecia 
+				if(m1<0 && m2<0)
+					return 0; // no collision
 
-				if(m1 > m2){
+				if(m1 > m2){ //przeciecie poziome
 					position.y = o->position.y + (position.y>o->position.y?1:-1) * (h1/2 + h/2);
-				}else{
+					if(position.y<o->position.y){//zderzenie od dolu
+						move &= ~4;
+						move &= ~8;
+						resetFalling();
+						return 4; //horisontal collision from bottom
+					}else{//zderzenie od gory
+						move &= ~4;
+						resetFalling();
+						return 8;	//horisontal collision from top
+					}
+				}else{ //przeciecie pionowe
 					position.x = o->position.x + (position.x>o->position.x?1:-1) * (w1/2 + w/2 +1);
 					start_pos.x = position.x;
-					clock.restart();					
+					clock.restart();
+					if((move & 4) !=0){
+						move &= ~4;
+						resetFalling();
+					}
+					return 3; // vertical collision	b01 for left, b10 for right			
 				}
-				
-				move &= ~4;
-				resetFalling();
 				return true;
 			}
-				
-			return false;
+			return 0; // no collision
 
 		}
 
@@ -174,6 +206,8 @@ class Object{
 		void setTexture(sf::Texture &t){
 			sprite.setTexture(t);
 			sprite.setOrigin(t.getSize().x/2, t.getSize().y/2);
+			position.y -=-sprite.getGlobalBounds().height/2;
+			sprite.setPosition(position);
 		}
 
 		void update(){
