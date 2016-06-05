@@ -2,12 +2,15 @@ CC = g++
 FLAGS = $(CXXFLAGS)
 SFML_LIBS = -lsfml-graphics -lsfml-window -lsfml-system
 
-all: main
+all: threadwindow main
 
-main:
-	$(CC) $(FLAGS) main.cpp ThreadWindow.cpp -o oiraM $(SFML_LIBS) -lX11 -std=c++11
+threadwindow:
+	$(CC) $(FLAGS) ThreadWindow.cpp -c $(SFML_LIBS) -lX11 -std=c++11
+
+main: threadwindow
+	$(CC) $(FLAGS) main.cpp ThreadWindow.o -o oiraM $(SFML_LIBS) -lX11 -std=c++11
 
 clean:
-	rm -f oiraM
+	rm -f ThreadWindow.o oiraM
 
 .PHONY: all clean
