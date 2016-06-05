@@ -2,6 +2,7 @@
 #define DEFINES_H
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <cmath>
 
 #define WIDTH           800
 #define HEIGHT          600
@@ -32,11 +33,6 @@
 
 #define MIN(a,b) ((a)<(b)?(a):(b))
 #define MAX(a,b) ((a)>(b)?(a):(b))
-
-
-static bool float_is_equal (float a, float b) {
-    return std::abs(a - b) <= 0.00001f;
-} /* float_is_different */
 
 enum ObjectType{player, grass, rock, sky, castle};
 enum Direction{Left, Right};
