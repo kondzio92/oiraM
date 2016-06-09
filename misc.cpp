@@ -7,7 +7,7 @@ bool loadMap (Object &player, Object &castle, Shared &shared) {
     std::ifstream file(MAP_PATH);
 
     if(file.is_open()) {
-        int x = 780, y;
+        int x = 580, y;
         std::string str;
 
         while(std::getline(file, str)) {

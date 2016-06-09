@@ -14,7 +14,7 @@
 #define PLAYER_PATH     IMAGES_PREFIX "player.png"
 #define GRASS_PATH      IMAGES_PREFIX "grass.png"
 #define ROCK_PATH       IMAGES_PREFIX "rock.png"
-#define CLOUD_PATH      IMAGES_PREFIX "cloud.bmp"
+#define CLOUD_PATH      IMAGES_PREFIX "cloud.png"
 #define CASTLE_PATH     IMAGES_PREFIX "castle.png"
 #define ENEMY_PATH     IMAGES_PREFIX "enemy.png"
 #define MAP_PATH        "map"

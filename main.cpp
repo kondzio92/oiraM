@@ -64,17 +64,22 @@ int main (int argc, char **argv) {
             if(player.execute())
                 shared.game_over = true;
 
+            int i=0;
             for(Object *enemy : shared.enemies){
             	enemy->execute();
             	enemy->update();
             	for(Object *object : shared.objects){
-            		if(enemy->colision(*object) & 3){ //any vertical collision (right or left)
+            		if(enemy->colision(*object) & 7){ //any vertical collision (right or left), or bottom
             			if(object->type==ObjectType::Player){
             				shared.game_over = true;
             			}
             			enemy->reverseDirection();
             		}
+            		if(enemy->colision(*object) & 8){
+            			shared.enemies.erase(shared.enemies.begin()+i, shared.enemies.begin()+i+1);
+            		}
             	}
+            	i++;
             }
 
             if(!shared.game_over && player.getPosition().x < window.getViewCenter().x - window.view.getSize().x/4 &&
