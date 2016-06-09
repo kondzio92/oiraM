@@ -18,6 +18,7 @@ class Object {
     public:
         Object (unsigned char type);
         void setPosition (int x, int y);
+        sf::Vector2f getPosition();
         void startMoving (Direction dir);
         void stopMoving ();
         void startFalling ();

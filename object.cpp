@@ -15,6 +15,10 @@ void Object::setPosition (int x, int y) {
     this->clock.restart();
 }
 
+sf::Vector2f Object::getPosition () {
+    return sf::Vector2f(this->position.x, this->position.y + this->sprite.getGlobalBounds().height / 2);
+}
+
 void Object::startMoving (Direction dir) {
     this->start_pos.x = this->position.x;
     this->clock.restart();
