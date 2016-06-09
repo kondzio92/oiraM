@@ -26,7 +26,7 @@ class Object {
         void jump ();
         void disableJump ();
         void enableJump ();
-        void execute ();
+        bool execute ();
         int colision (Object &obj);
         void setTexture (sf::Texture &tex);
         void update ();

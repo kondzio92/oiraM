@@ -10,6 +10,14 @@ ThreadWindow::ThreadWindow(int w, int h, std::string title, Shared *shared):
         start_button = new sf::RectangleShape(sf::Vector2f(90, 90));
         start_button->setPosition(10,10);
 
+        this->font.loadFromFile("Morbodoni.ttf");
+        this->text.setFont(font);
+        this->text.setColor(sf::Color::Red);
+        this->text.setCharacterSize(60);
+        this->text.setString("Game Over");
+        this->text.setPosition((WIDTH - text.getLocalBounds().width) / 2.0f , (HEIGHT - text.getLocalBounds().height) / 2.0f - 100.0f);
+
+
         if(!player_tex.loadFromFile(PLAYER_PATH)) {
             fprintf(stderr, "ERROR: Cannot load '%s' image\n", PLAYER_PATH);
             exit(-1);
@@ -41,6 +49,7 @@ ThreadWindow::~ThreadWindow()
 
 void ThreadWindow::main(){
     sf::Event event;
+
     window = new sf::RenderWindow(sf::VideoMode(width,height,32), title, sf::Style::Titlebar | sf::Style::Close);
 
     //window->setKeyRepeatEnabled(false);
@@ -128,6 +137,8 @@ void ThreadWindow::main(){
                 }
                 window->draw(o->sprite);
             }
+            if(shared->game_over)
+                window->draw(text);
         }else if(shared->game_state == 2){
             window->draw(*start_button);
         }

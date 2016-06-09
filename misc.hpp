@@ -4,6 +4,7 @@
 #include "object.hpp"
 
 struct Shared{
+    bool game_over;
     std::vector<Object*> objects, bg_objects, enemys;
     unsigned char game_state;
 };

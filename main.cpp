@@ -23,6 +23,7 @@ int main (int argc, char **argv) {
     Shared shared;
     Object player(ObjectType::Player);
 
+    shared.game_over = false;
     player.startFalling();
     shared.objects.push_back(&player);
     if(!loadMap(player, shared))
@@ -59,7 +60,8 @@ int main (int argc, char **argv) {
                 player.enableJump();
             }
 
-            player.execute();
+            if(player.execute())
+                shared.game_over = true;
 
             bool on_floor = false;
             for(Object *o : shared.objects){

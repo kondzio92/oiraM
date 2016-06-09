@@ -81,7 +81,8 @@ void Object::enableJump () {
     this->move &= ~8;
 }
 
-void Object::execute () {
+bool Object::execute () {
+    bool ret = false; // game over check
     sf::Vector2f way_diff = sf::Vector2f(0.0f, 0.0f);
 
     way_diff = sf::Vector2f(0,0);
@@ -108,6 +109,11 @@ void Object::execute () {
         this->position.x = 0.0f;
     if(this->position.x > 800.0f)
         this->position.x = 800.0f;
+    if(this->position.y > HEIGHT) {
+        this->position.y = ((int)this->position.y) % (int)HEIGHT;
+        ret = true;
+    }
+    return ret;
 }
 
 int Object::colision (Object &obj) {

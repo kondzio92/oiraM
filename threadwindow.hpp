@@ -23,6 +23,8 @@ class ThreadWindow{
         bool open = false;
         int width, height;
         std::string title;
+        sf::Font font;
+        sf::Text text;
         sf::Thread thread;
         sf::RenderWindow *window;
         sf::Texture player_tex, grass_tex, rock_tex, sky_tex, castle_tex;
