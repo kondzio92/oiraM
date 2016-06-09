@@ -40,10 +40,6 @@ ThreadWindow::~ThreadWindow()
 }
 
 void ThreadWindow::main(){
-#ifdef __linux__
-    XInitThreads();
-#endif
-
     sf::Event event;
     window = new sf::RenderWindow(sf::VideoMode(width,height,32), title, sf::Style::Titlebar | sf::Style::Close);
 

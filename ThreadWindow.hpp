@@ -6,9 +6,8 @@
 #include <list>
 #include <string.h>
 #include "headers.h"
-#ifdef __linux__
-#include <X11/Xlib.h>
-#endif
+#include "object.hpp"
+#include "misc.hpp"
 
 class ThreadWindow{
     public:

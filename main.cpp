@@ -3,13 +3,16 @@
 #include <cstring> 
 #include <cmath>
 #include <cerrno>
+#include <iostream>
 #include <fstream>
+#include <vector>
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include "headers.h"
 #include "ThreadWindow.hpp"
-#include <iostream>
-#include <vector>
+#ifdef __linux__
+#include <X11/Xlib.h>
+#endif
 
 void loadWorld(std::string filename, Object *player, std::vector<Object*> &objects, std::vector<Object*> &bg, std::vector<Object*> &animated);
 
@@ -60,7 +63,7 @@ int main (int argc, char **argv) {
             bool on_floor = false;
             for(Object *o : shared.objects){
                 if(o!=&player){
-                    if((player.colision(o) & 4) !=0)
+                    if((player.colision(*o) & 4) !=0)
                         on_floor = true;
                 }
             }
