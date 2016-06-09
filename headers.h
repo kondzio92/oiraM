@@ -163,8 +163,8 @@ class Object{
                     fabs(o->position.y-position.y)<=h1/2+h/2){
                 float m1 = MIN(position.x+w/2, o->position.x+w1/2)-MAX(position.x-w/2, o->position.x-w1/2);
                 float m2 = MIN(position.y+h/2, o->position.y+h1/2) -MAX(position.y-h/2, o->position.y-h1/2);
-                //m1- dlugosc krawedzi x prostokata przeciecia 
-                //m2- dlugosc krawedzi y prostokata przeciecia 
+                //m1- dlugosc krawedzi x prostokata przeciecia
+                //m2- dlugosc krawedzi y prostokata przeciecia
                 if(m1<0 && m2<0)
                     return 0; // no collision
 
@@ -184,11 +184,7 @@ class Object{
                     position.x = o->position.x + (position.x>o->position.x?1:-1) * (w1/2 + w/2 +1);
                     start_pos.x = position.x;
                     clock.restart();
-                    if((move & 4) !=0){
-                        move &= ~4;
-                        resetFalling();
-                    }
-                    return 3; // vertical collision	b01 for left, b10 for right			
+                    return 3; // vertical collision	b01 for left, b10 for right
                 }
                 return true;
             }
