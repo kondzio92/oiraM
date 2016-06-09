@@ -4,11 +4,11 @@
 #include "object.hpp"
 
 struct Shared{
-    bool game_over;
+    bool win, game_over;
     std::vector<Object*> objects, bg_objects, enemys;
     unsigned char game_state;
 };
 
-bool loadMap (Object &player, Shared &shared);
+bool loadMap (Object &player, Object &castle, Shared &shared);
 
 #endif

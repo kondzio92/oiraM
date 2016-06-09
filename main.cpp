@@ -20,21 +20,23 @@ int main (int argc, char **argv) {
     XInitThreads();
 #endif
     char move=0;
+    sf::Vector2f finish;
     Shared shared;
-    Object player(ObjectType::Player);
+    Object player(ObjectType::Player), castle(ObjectType::Castle);
 
-    shared.game_over = false;
-    player.startFalling();
+    shared.win = shared.game_over = false;
     shared.objects.push_back(&player);
-    if(!loadMap(player, shared))
+    if(!loadMap(player, castle, shared))
         return 1;
+    shared.bg_objects.push_back(&castle);
     shared.game_state = 1; // start screen - main menu or game
 
     ThreadWindow window(WIDTH, HEIGHT, "oiraM", &shared);
 
     while(!window.isOpen());
+    player.startFalling();
     while(window.isOpen()){
-        if(shared.game_state == 1){		//game
+        if(!shared.win && shared.game_state == 1) { //game
             if (((move & 1) == 0) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
                 move |= 1;
                 player.startMoving(Left);
@@ -76,10 +78,13 @@ int main (int argc, char **argv) {
                 player.disableJump();
             player.update();
 
-        }else if(shared.game_state == 2){	// main menu screen
+            if(!shared.game_over && fabs(player.getPosition().x - castle.getPosition().x) < 3.0f && fabs(player.getPosition().y - castle.getPosition().y) < 3.0f)
+                shared.win = true;
+
+        }else if(shared.game_state == 2) { // main menu screen
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
                 sf::Vector2i clickPosition = sf::Mouse::getPosition(*window.getWindow());
-                if(clickPosition.x > 10 && clickPosition.x < 100 && 	//start button
+                if(clickPosition.x > 10 && clickPosition.x < 100 && // start button
                         clickPosition.y > 10 && clickPosition.y < 100){
                     shared.game_state = 1;
                 }

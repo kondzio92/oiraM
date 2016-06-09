@@ -2,15 +2,16 @@
 #include "headers.hpp"
 #include "misc.hpp"
 
-bool loadMap (Object &player, Shared &shared) {
+bool loadMap (Object &player, Object &castle, Shared &shared) {
+    bool is_player = false, is_castle = false;
     std::ifstream file(MAP_PATH);
 
     if(file.is_open()) {
-        int x = 780, y = 0;
+        int x = 780, y;
         std::string str;
 
         while(std::getline(file, str)) {
-            y = 0;
+            y = 40;
             for(char &c: str){
                 switch(c) {
                     case 'X':
@@ -18,11 +19,24 @@ bool loadMap (Object &player, Shared &shared) {
                         shared.objects.back()->setPosition(x, y);
                         break;
                     case 'P':
+                        if(is_player) {
+                            fprintf(stderr, "ERROR: Player can be placed only once\n");
+                            return false;
+                        }
                         player.setPosition(x, y);
+                        is_player = true;
                         break;
                     case 'C':
                         shared.bg_objects.push_back(new Object(ObjectType::Cloud));
                         shared.bg_objects.back()->setPosition(x, y);
+                        break;
+                    case 'F':
+                        if(is_castle) {
+                            fprintf(stderr, "ERROR: Castle can be placed only once\n");
+                            return false;
+                        }
+                        castle.setPosition(x, y);
+                        is_castle = true;
                         break;
                     case 'G':
                         shared.objects.push_back(new Object(ObjectType::Rock));

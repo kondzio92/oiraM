@@ -12,11 +12,7 @@ ThreadWindow::ThreadWindow(int w, int h, std::string title, Shared *shared):
 
         this->font.loadFromFile("Morbodoni.ttf");
         this->text.setFont(font);
-        this->text.setColor(sf::Color::Red);
         this->text.setCharacterSize(60);
-        this->text.setString("Game Over");
-        this->text.setPosition((WIDTH - text.getLocalBounds().width) / 2.0f , (HEIGHT - text.getLocalBounds().height) / 2.0f - 100.0f);
-
 
         if(!player_tex.loadFromFile(PLAYER_PATH)) {
             fprintf(stderr, "ERROR: Cannot load '%s' image\n", PLAYER_PATH);
@@ -137,8 +133,18 @@ void ThreadWindow::main(){
                 }
                 window->draw(o->sprite);
             }
-            if(shared->game_over)
+            if(shared->win) {
+                this->text.setColor(sf::Color::Green);
+                this->text.setString("You Win !");
+                this->text.setPosition((WIDTH - text.getLocalBounds().width) / 2.0f , (HEIGHT - text.getLocalBounds().height) / 2.0f - 200.0f);
                 window->draw(text);
+            }
+            if(shared->game_over) {
+                this->text.setColor(sf::Color::Red);
+                this->text.setString("Game Over");
+                this->text.setPosition((WIDTH - text.getLocalBounds().width) / 2.0f , (HEIGHT - text.getLocalBounds().height) / 2.0f - 200.0f);
+                window->draw(text);
+            }
         }else if(shared->game_state == 2){
             window->draw(*start_button);
         }

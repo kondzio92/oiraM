@@ -2,7 +2,6 @@
 #include "object.hpp"
 
 Object::Object (unsigned char type) {
-    this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, 0);
     this->type = type;
     this->create = true;
     this->clock.restart();
@@ -153,7 +152,6 @@ int Object::colision (Object &obj) {
             this->clock.restart();
             return 3; // vertical collision (b01 for left, b10 for right)
         }
-        return true;
     }
     return 0; // no collision
 }
@@ -161,7 +159,7 @@ int Object::colision (Object &obj) {
 void Object::setTexture (sf::Texture &tex) {
     this->sprite.setTexture(tex);
     this->sprite.setOrigin(tex.getSize().x / 2, tex.getSize().y / 2);
-    this->position.y -= -this->sprite.getGlobalBounds().height / 2;
+    this->position.y -= this->sprite.getGlobalBounds().height / 2;
     this->sprite.setPosition(this->position);
 }
 
