@@ -30,8 +30,8 @@ ThreadWindow::ThreadWindow(int w, int h, std::string title, Shared *shared):
             fprintf(stderr, "ERROR: Cannot load '%s' image\n", ROCK_PATH);
             exit(-1);
         }
-        if(!sky_tex.loadFromFile(SKY_PATH)) {
-            fprintf(stderr, "ERROR: Cannot load '%s' image\n", SKY_PATH);
+        if(!cloud_tex.loadFromFile(CLOUD_PATH)) {
+            fprintf(stderr, "ERROR: Cannot load '%s' image\n", CLOUD_PATH);
             exit(-1);
         }
         if(!castle_tex.loadFromFile(CASTLE_PATH)) {
@@ -82,7 +82,7 @@ void ThreadWindow::main(){
                             o->setTexture(rock_tex);
                             break;
                         case ObjectType::Sky:
-                            o->setTexture(sky_tex);
+                            o->setTexture(cloud_tex);
                             break;
                         case ObjectType::Castle:
                             o->setTexture(castle_tex);
@@ -105,7 +105,7 @@ void ThreadWindow::main(){
                             o->setTexture(rock_tex);
                             break;
                         case ObjectType::Sky:
-                            o->setTexture(sky_tex);
+                            o->setTexture(cloud_tex);
                             break;
                         case ObjectType::Castle:
                             o->setTexture(castle_tex);
@@ -128,7 +128,7 @@ void ThreadWindow::main(){
                             o->setTexture(rock_tex);
                             break;
                         case ObjectType::Sky:
-                            o->setTexture(sky_tex);
+                            o->setTexture(cloud_tex);
                             break;
                         case ObjectType::Castle:
                             o->setTexture(castle_tex);

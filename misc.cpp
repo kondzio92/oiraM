@@ -25,6 +25,8 @@ bool loadMap (Object &player, Shared &shared) {
                         shared.bg_objects.back()->setPosition(x, y);
                         break;
                     case 'G':
+                        shared.objects.push_back(new Object(ObjectType::Rock));
+                        shared.objects.back()->setPosition(x, y);
                         shared.objects.push_back(new Object(ObjectType::Grass));
                         shared.objects.back()->setPosition(x, y);
                         break;
