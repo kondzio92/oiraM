@@ -1,4 +1,4 @@
-#include "ThreadWindow.hpp"
+#include "threadwindow.hpp"
 
 ThreadWindow::ThreadWindow(int w, int h, std::string title, Shared *shared):
     thread(&ThreadWindow::main, this){

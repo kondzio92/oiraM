@@ -10,7 +10,7 @@
 #include "headers.hpp"
 #include "object.hpp"
 #include "misc.hpp"
-#include "ThreadWindow.hpp"
+#include "threadwindow.hpp"
 #ifdef __linux__
 #include <X11/Xlib.h>
 #endif
