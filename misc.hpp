@@ -8,4 +8,6 @@ struct Shared{
     unsigned char game_state;
 };
 
+bool loadMap (Object &player, Shared &shared);
+
 #endif

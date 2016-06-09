@@ -1,8 +1,5 @@
-#ifndef DEFINES_H
-#define DEFINES_H
-#include <SFML/Graphics.hpp>
-#include <vector>
-#include <cmath>
+#ifndef HEADERS_HPP
+#define HEADERS_HPP
 
 #define WIDTH           800
 #define HEIGHT          600
@@ -26,6 +23,7 @@
 #define ROCK_PATH       IMAGES_PREFIX "rock-" SIZE_STR ".png"
 #define SKY_PATH        IMAGES_PREFIX "sky-" SIZE_STR ".bmp"
 #define CASTLE_PATH     IMAGES_PREFIX "castle.png"
+#define MAP_PATH        "map"
 
 #define MIN(a,b) ((a)<(b)?(a):(b))
 #define MAX(a,b) ((a)>(b)?(a):(b))

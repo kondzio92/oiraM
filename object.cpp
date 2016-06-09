@@ -1,3 +1,4 @@
+#include <cmath>
 #include "object.hpp"
 
 Object::Object (unsigned char type) {

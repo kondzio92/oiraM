@@ -4,28 +4,29 @@
 #include <cmath>
 #include <cerrno>
 #include <iostream>
-#include <fstream>
 #include <vector>
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
-#include "headers.h"
+#include "headers.hpp"
+#include "object.hpp"
+#include "misc.hpp"
 #include "ThreadWindow.hpp"
 #ifdef __linux__
 #include <X11/Xlib.h>
 #endif
 
-void loadWorld(std::string filename, Object *player, std::vector<Object*> &objects, std::vector<Object*> &bg, std::vector<Object*> &animated);
-
 int main (int argc, char **argv) {
 #ifdef __linux__
     XInitThreads();
 #endif
+    char move=0;
     Shared shared;
     Object player(ObjectType::Player);
+
     player.startFalling();
     shared.objects.push_back(&player);
-    loadWorld("map",&player, shared.objects, shared.bg_objects, shared.enemys);
-    char move=0;
+    if(!loadMap(player, shared))
+        return 1;
     shared.game_state = 1; // start screen - main menu or game
 
     ThreadWindow window(WIDTH, HEIGHT, "oiraM", &shared);
@@ -87,39 +88,3 @@ int main (int argc, char **argv) {
     return 0;
 }
 
-void loadWorld(std::string filename, Object *player, std::vector<Object*> &objects, std::vector<Object*> &bg, std::vector<Object*> &animated){
-    std::ifstream file(filename);
-
-    if(file.is_open()){
-        std::string str;
-        int x=780, y=0;
-        while(std::getline(file, str)){
-            y=0;
-            for(char  &c: str){
-                switch(c){
-                    case 'X':
-                        objects.push_back(new Object(ObjectType::Rock));
-                        objects.back()->setPosition(x, y);
-                        break;
-                    case 'P':
-                        player->setPosition(x, y);
-                        break;
-                    case 'C':
-                        bg.push_back(new Object(ObjectType::Sky));
-                        bg.back()->setPosition(x, y);
-                        break;
-                    case 'G':
-                        objects.push_back(new Object(ObjectType::Grass));
-                        objects.back()->setPosition(x, y);
-                        break;
-                }
-                y+=40;
-            }
-            x-=40;
-        }
-    }else{
-        fprintf(stderr, "ERROR: Cannot load file world");
-        exit(-1);
-    }
-    file.close();
-}

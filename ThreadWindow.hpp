@@ -5,7 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <list>
 #include <string.h>
-#include "headers.h"
+#include "headers.hpp"
 #include "object.hpp"
 #include "misc.hpp"
 

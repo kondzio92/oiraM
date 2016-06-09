@@ -3,7 +3,7 @@
 
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
-#include "headers.h"
+#include "headers.hpp"
 
 class Object {
     public:
