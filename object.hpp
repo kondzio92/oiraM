@@ -11,7 +11,7 @@ class Object {
         char move = 0;
         unsigned char type;
         float sec, speed = MIN_SPEED, jump_speed = -1.0f;
-        sf::Vector2f position, start_pos, last_pos, falling_start_pos;
+        sf::Vector2f position, start_pos, falling_start_pos;
         sf::Clock clock, jump_clock, falling_clock;
         sf::Sprite sprite;
 
@@ -28,7 +28,6 @@ class Object {
         void enableJump ();
         void execute ();
         int colision (Object &obj);
-        void backToLastCorrectPosition ();
         void setTexture (sf::Texture &tex);
         void update ();
         sf::FloatRect getSize ();

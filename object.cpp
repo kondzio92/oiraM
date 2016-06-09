@@ -84,7 +84,6 @@ void Object::enableJump () {
 void Object::execute () {
     sf::Vector2f way_diff = sf::Vector2f(0.0f, 0.0f);
 
-    this->last_pos = this->position;
     way_diff = sf::Vector2f(0,0);
     if((this->move & 1) != 0){
         sec = this->clock.getElapsedTime().asSeconds();
@@ -147,11 +146,6 @@ int Object::colision (Object &obj) {
         return true;
     }
     return 0; // no collision
-}
-
-void Object::backToLastCorrectPosition () {
-    this->move &= ~3;
-    this->sprite.setPosition(this->last_pos);
 }
 
 void Object::setTexture (sf::Texture &tex) {
