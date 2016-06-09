@@ -21,7 +21,7 @@ bool loadMap (Object &player, Shared &shared) {
                         player.setPosition(x, y);
                         break;
                     case 'C':
-                        shared.bg_objects.push_back(new Object(ObjectType::Sky));
+                        shared.bg_objects.push_back(new Object(ObjectType::Cloud));
                         shared.bg_objects.back()->setPosition(x, y);
                         break;
                     case 'G':

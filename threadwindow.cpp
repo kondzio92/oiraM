@@ -81,7 +81,7 @@ void ThreadWindow::main(){
                         case ObjectType::Rock:
                             o->setTexture(rock_tex);
                             break;
-                        case ObjectType::Sky:
+                        case ObjectType::Cloud:
                             o->setTexture(cloud_tex);
                             break;
                         case ObjectType::Castle:
@@ -104,7 +104,7 @@ void ThreadWindow::main(){
                         case ObjectType::Rock:
                             o->setTexture(rock_tex);
                             break;
-                        case ObjectType::Sky:
+                        case ObjectType::Cloud:
                             o->setTexture(cloud_tex);
                             break;
                         case ObjectType::Castle:
@@ -127,7 +127,7 @@ void ThreadWindow::main(){
                         case ObjectType::Rock:
                             o->setTexture(rock_tex);
                             break;
-                        case ObjectType::Sky:
+                        case ObjectType::Cloud:
                             o->setTexture(cloud_tex);
                             break;
                         case ObjectType::Castle:

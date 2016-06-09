@@ -25,7 +25,7 @@ enum ObjectType{
     Player,
     Grass,
     Rock,
-    Sky,
+    Cloud,
     Castle
 };
 
