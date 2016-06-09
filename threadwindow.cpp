@@ -38,6 +38,10 @@ ThreadWindow::ThreadWindow(int w, int h, std::string title, Shared *shared):
             fprintf(stderr, "ERROR: Cannot load '%s' image\n", CASTLE_PATH);
             exit(-1);
         }
+        if(!enemy_tex.loadFromFile(ENEMY_PATH)) {
+            fprintf(stderr, "ERROR: Cannot load '%s' image\n", ENEMY_PATH);
+            exit(-1);
+        }
 
         thread.launch();
     }
@@ -66,7 +70,7 @@ void ThreadWindow::main(){
             }
         }
 
-        window->clear(sf::Color(200,200,219,255));
+        window->clear(sf::Color(190,220,255,255));
         if(shared->game_state == 1){
             for(Object *o :  shared->bg_objects){
                 if(o->create){
@@ -86,6 +90,9 @@ void ThreadWindow::main(){
                             break;
                         case ObjectType::Castle:
                             o->setTexture(castle_tex);
+                            break;
+                        case ObjectType::Enemy:
+                            o->setTexture(enemy_tex);
                             break;
                     }
                 }
@@ -110,11 +117,14 @@ void ThreadWindow::main(){
                         case ObjectType::Castle:
                             o->setTexture(castle_tex);
                             break;
+                        case ObjectType::Enemy:
+                            o->setTexture(enemy_tex);
+                            break;
                     }
                 }
                 window->draw(o->sprite);
             }
-            for(Object *o :  shared->enemys){
+            for(Object *o :  shared->enemies){
                 if(o->create){
                     o->create = false;
                     switch(o->type){
@@ -133,6 +143,9 @@ void ThreadWindow::main(){
                         case ObjectType::Castle:
                             o->setTexture(castle_tex);
                             break;
+                        case ObjectType::Enemy:
+                            o->setTexture(enemy_tex);
+                            break;
                     }
                 }
                 window->draw(o->sprite);
@@ -140,13 +153,13 @@ void ThreadWindow::main(){
             if(shared->win) {
                 this->text.setColor(sf::Color::Green);
                 this->text.setString("You Win !");
-                this->text.setPosition((WIDTH - text.getLocalBounds().width) / 2.0f , (HEIGHT - text.getLocalBounds().height) / 2.0f - 200.0f);
+                this->text.setPosition(view.getCenter().x - text.getLocalBounds().width / 2.0f , (HEIGHT - text.getLocalBounds().height) / 2.0f - 200.0f);
                 window->draw(text);
             }
             if(shared->game_over) {
                 this->text.setColor(sf::Color::Red);
                 this->text.setString("Game Over");
-                this->text.setPosition((WIDTH - text.getLocalBounds().width) / 2.0f , (HEIGHT - text.getLocalBounds().height) / 2.0f - 200.0f);
+                this->text.setPosition(view.getCenter().x - text.getLocalBounds().width / 2.0f , (HEIGHT - text.getLocalBounds().height) / 2.0f - 200.0f);
                 window->draw(text);
             }
         }else if(shared->game_state == 2){

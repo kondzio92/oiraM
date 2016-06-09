@@ -5,7 +5,7 @@
 
 struct Shared{
     bool win, game_over;
-    std::vector<Object*> objects, bg_objects, enemys;
+    std::vector<Object*> objects, bg_objects, enemies;
     unsigned char game_state;
     sf::View *view;
 };

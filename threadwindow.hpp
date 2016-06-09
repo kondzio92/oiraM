@@ -30,7 +30,7 @@ class ThreadWindow{
         sf::Text text;
         sf::Thread thread;
         sf::RenderWindow *window;
-        sf::Texture player_tex, grass_tex, rock_tex, cloud_tex, castle_tex;
+        sf::Texture player_tex, grass_tex, rock_tex, cloud_tex, castle_tex, enemy_tex;
         sf::RectangleShape *start_button;
         Shared *shared;
 };

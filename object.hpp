@@ -14,7 +14,8 @@ class Object {
         sf::Vector2f position, start_pos, falling_start_pos;
         sf::Clock clock, jump_clock, falling_clock;
         sf::Sprite sprite;
-        float x_limit=780;
+        float left_limit=780, right_limit=0;
+        float accel=ACCEL, max_speed=MAX_SPEED;
 
     public:
         Object (unsigned char type);
@@ -28,6 +29,9 @@ class Object {
         void jump ();
         void disableJump ();
         void enableJump ();
+        void reverseDirection();
+        void setAccel(float accel);
+        void setMaxSpeed(float speed);
         bool execute ();
         int colision (Object &obj);
         void setTexture (sf::Texture &tex);

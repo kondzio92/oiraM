@@ -16,6 +16,7 @@
 #define ROCK_PATH       IMAGES_PREFIX "rock.png"
 #define CLOUD_PATH      IMAGES_PREFIX "cloud.bmp"
 #define CASTLE_PATH     IMAGES_PREFIX "castle.png"
+#define ENEMY_PATH     IMAGES_PREFIX "enemy.png"
 #define MAP_PATH        "map"
 
 #define MIN(a,b) ((a)<(b)?(a):(b))
@@ -26,7 +27,8 @@ enum ObjectType{
     Grass,
     Rock,
     Cloud,
-    Castle
+    Castle,
+    Enemy
 };
 
 enum Direction{

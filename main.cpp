@@ -3,7 +3,6 @@
 #include <cstring> 
 #include <cmath>
 #include <cerrno>
-#include <iostream>
 #include <vector>
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
@@ -65,9 +64,24 @@ int main (int argc, char **argv) {
             if(player.execute())
                 shared.game_over = true;
 
-            if(player.getPosition().x < window.getViewCenter().x - window.view.getSize().x/4){
+            for(Object *enemy : shared.enemies){
+            	enemy->execute();
+            	enemy->update();
+            	for(Object *object : shared.objects){
+            		if(enemy->colision(*object) & 3){ //any vertical collision (right or left)
+            			if(object->type==ObjectType::Player){
+            				shared.game_over = true;
+            			}
+            			enemy->reverseDirection();
+            		}
+            	}
+            }
+
+            if(!shared.game_over && player.getPosition().x < window.getViewCenter().x - window.view.getSize().x/4 &&
+            	fabs(player.getPosition().x - castle.getPosition().x) > 100.0f){
             	window.setViewCenter(player.getPosition().x + window.view.getSize().x/4 ,300);
-            	player.x_limit = window.getViewCenter().x + window.view.getSize().x/2;
+            	player.right_limit = window.getViewCenter().x + window.view.getSize().x/2 - 20;
+            	player.left_limit = window.getViewCenter().x - window.view.getSize().x/2 + 20;
             }
 
             bool on_floor = false;

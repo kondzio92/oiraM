@@ -24,7 +24,7 @@ void Object::startMoving (Direction dir) {
 
     if(dir == Direction::Left) {
         if((this->move & 2) != 0) {
-            this->speed = MAX(this->speed + ACCEL * MIN(this->clock.getElapsedTime().asSeconds(), MAX_SPEED/ACCEL) - CUT_SPEED, MIN_SPEED);
+            this->speed = MAX(this->speed + accel * MIN(this->clock.getElapsedTime().asSeconds(), max_speed/accel) - CUT_SPEED, MIN_SPEED);
             this->start_pos.x = this->position.x;
         }
         this->move |= 1;
@@ -32,7 +32,7 @@ void Object::startMoving (Direction dir) {
         this->sprite.setScale(1.0f, 1.0f);
     }else if(dir == Direction::Right){
         if((this->move & 1) != 0){
-            this->speed = MAX(this->speed + ACCEL * MIN(this->clock.getElapsedTime().asSeconds(), MAX_SPEED/ACCEL) - CUT_SPEED, MIN_SPEED);
+            this->speed = MAX(this->speed + accel * MIN(this->clock.getElapsedTime().asSeconds(), max_speed/accel) - CUT_SPEED, MIN_SPEED);
             this->start_pos.x = this->position.x;
         }
         this->move |= 2;
@@ -68,7 +68,7 @@ void Object::jump () {
     if((this->move & 4) == 0 && (this->move & 8) == 0){	// 4 is for jumping, 8 lock for jump
         this->jump_speed = MAX(MIN_SPEED, MIN_JUMP_SPEED) * 2.0f;
         if((this->move & 3) != 0)
-            this->jump_speed = MAX(this->speed + MIN(ACCEL * this->clock.getElapsedTime().asSeconds(), MAX_SPEED - this->speed), MIN_JUMP_SPEED) * 2.0f;
+            this->jump_speed = MAX(this->speed + MIN(accel * this->clock.getElapsedTime().asSeconds(), max_speed - this->speed), MIN_JUMP_SPEED) * 2.0f;
         this->start_pos.y = this->position.y;
         this->jump_clock.restart();
         this->move |= 4;
@@ -84,6 +84,21 @@ void Object::enableJump () {
     this->move &= ~8;
 }
 
+void Object::reverseDirection(){
+    if(this->move & 1)
+        startMoving(Direction::Right);
+    else
+        startMoving(Direction::Left);
+}
+
+void Object::setAccel(float accel){
+    this->accel = accel;    
+}
+
+void Object::setMaxSpeed(float speed){
+    this->max_speed = speed;
+}
+
 bool Object::execute () {
     bool ret = false; // game over check
     sf::Vector2f way_diff = sf::Vector2f(0.0f, 0.0f);
@@ -91,10 +106,10 @@ bool Object::execute () {
     way_diff = sf::Vector2f(0,0);
     if((this->move & 1) != 0){
         sec = this->clock.getElapsedTime().asSeconds();
-        way_diff.x = -(this->speed + ACCEL * MIN(sec, MAX_SPEED/ACCEL)) * sec; /* s = vt + (at^2)/2  ->  s = (t + at/2) * t,  where ACCEL = a/2 v */
+        way_diff.x = -(this->speed + accel * MIN(sec, max_speed/accel)) * sec; /* s = vt + (at^2)/2  ->  s = (t + at/2) * t,  where accel = a/2 v */
     }else if((this->move & 2) != 0){
         this->sec = clock.getElapsedTime().asSeconds();
-        way_diff.x = (this->speed + ACCEL * MIN(sec, MAX_SPEED/ACCEL)) * sec; /* s = vt + (at^2)/2  ->  s = (t + at/2) * t,  where ACCEL = a/2 v */
+        way_diff.x = (this->speed + accel * MIN(sec, max_speed/accel)) * sec; /* s = vt + (at^2)/2  ->  s = (t + at/2) * t,  where accel = a/2 v */
     }
 
     if((this->move & 4) != 0){
@@ -108,8 +123,12 @@ bool Object::execute () {
     }
     this->position = this->start_pos + way_diff;
 
-    if(this->position.x > x_limit)
-        this->position.x = x_limit;
+    if(type==ObjectType::Player){
+        if(this->position.x < left_limit)
+            this->position.x = left_limit;
+        if(this->position.x > right_limit)
+            this->position.x = right_limit;
+    }
     if(this->position.y > HEIGHT) {
         this->position.y = ((int)this->position.y) % (int)HEIGHT;
         ret = true;
@@ -129,7 +148,7 @@ int Object::colision (Object &obj) {
         float m2 = MIN(this->position.y + h / 2.0f, obj.position.y + h1 / 2.0f) - MAX(this->position.y - h / 2.0f, obj.position.y - h1 / 2.0f);
         // m1- dlugosc krawedzi x prostokata przeciecia
         // m2- dlugosc krawedzi y prostokata przeciecia
-        if(m1 < 0.0f && m2 < 0.0f)
+        if(m1 < 3.0f && m2 < 3.0f)
             return 0; // no collision
 
         if(m1 > m2) {

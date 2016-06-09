@@ -26,6 +26,14 @@ bool loadMap (Object &player, Object &castle, Shared &shared) {
                         player.setPosition(x, y);
                         is_player = true;
                         break;
+                    case 'E':
+                        shared.enemies.push_back(new Object(ObjectType::Enemy));
+                        shared.enemies.back()->setPosition(x, y);
+                        shared.enemies.back()->startFalling();
+                        shared.enemies.back()->startMoving(Direction::Right);
+                        shared.enemies.back()->setAccel(200.0f);
+                        shared.enemies.back()->setMaxSpeed(100.0f);
+                        break;
                     case 'C':
                         shared.bg_objects.push_back(new Object(ObjectType::Cloud));
                         shared.bg_objects.back()->setPosition(x, y);
