@@ -65,6 +65,11 @@ int main (int argc, char **argv) {
             if(player.execute())
                 shared.game_over = true;
 
+            if(player.getPosition().x < window.getViewCenter().x - window.view.getSize().x/4){
+            	window.setViewCenter(player.getPosition().x + window.view.getSize().x/4 ,300);
+            	player.x_limit = window.getViewCenter().x + window.view.getSize().x/2;
+            }
+
             bool on_floor = false;
             for(Object *o : shared.objects){
                 if(o!=&player){

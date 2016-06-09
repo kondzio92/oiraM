@@ -17,6 +17,9 @@ class ThreadWindow{
         void setShared(Shared *shared);
         bool isOpen();
         sf::RenderWindow* getWindow();
+        void setViewCenter(float x, float y);
+        sf::Vector2f getViewCenter();
+        sf::View view;
 
     protected:
         virtual void main();

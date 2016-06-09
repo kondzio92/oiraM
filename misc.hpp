@@ -7,6 +7,7 @@ struct Shared{
     bool win, game_over;
     std::vector<Object*> objects, bg_objects, enemys;
     unsigned char game_state;
+    sf::View *view;
 };
 
 bool loadMap (Object &player, Object &castle, Shared &shared);

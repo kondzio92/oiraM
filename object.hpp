@@ -14,6 +14,7 @@ class Object {
         sf::Vector2f position, start_pos, falling_start_pos;
         sf::Clock clock, jump_clock, falling_clock;
         sf::Sprite sprite;
+        float x_limit=780;
 
     public:
         Object (unsigned char type);

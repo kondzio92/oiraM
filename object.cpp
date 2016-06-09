@@ -108,10 +108,8 @@ bool Object::execute () {
     }
     this->position = this->start_pos + way_diff;
 
-    if(this->position.x < 0.0f)
-        this->position.x = 0.0f;
-    if(this->position.x > 800.0f)
-        this->position.x = 800.0f;
+    if(this->position.x > x_limit)
+        this->position.x = x_limit;
     if(this->position.y > HEIGHT) {
         this->position.y = ((int)this->position.y) % (int)HEIGHT;
         ret = true;

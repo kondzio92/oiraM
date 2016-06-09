@@ -7,6 +7,10 @@ ThreadWindow::ThreadWindow(int w, int h, std::string title, Shared *shared):
         this->title = title;
         this->shared = shared;
 
+        this->shared->view = &this->view;
+        this->view.setCenter(WIDTH/2, HEIGHT/2);
+        this->view.setSize(WIDTH, HEIGHT);
+
         start_button = new sf::RectangleShape(sf::Vector2f(90, 90));
         start_button->setPosition(10,10);
 
@@ -47,7 +51,7 @@ void ThreadWindow::main(){
     sf::Event event;
 
     window = new sf::RenderWindow(sf::VideoMode(width,height,32), title, sf::Style::Titlebar | sf::Style::Close);
-
+    window->setView(this->view);
     //window->setKeyRepeatEnabled(false);
     //window->setFramerateLimit(60);
     open = true;
@@ -167,4 +171,13 @@ bool ThreadWindow::isOpen(){
 
 sf::RenderWindow* ThreadWindow::getWindow(){
     return window;
+}
+
+void ThreadWindow::setViewCenter(float x, float y){
+    this->view.setCenter(x, y);
+    this->window->setView(this->view);
+}
+
+sf::Vector2f ThreadWindow::getViewCenter(){
+    return this->view.getCenter();
 }
