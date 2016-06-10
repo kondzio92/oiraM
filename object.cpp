@@ -4,6 +4,7 @@
 Object::Object (unsigned char type) {
     this->type = type;
     this->create = true;
+    this->killed = false;
     this->clock.restart();
 }
 

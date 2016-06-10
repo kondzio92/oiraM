@@ -7,7 +7,7 @@
 
 class Object {
     public:
-        bool create;
+        bool create, killed;
         char move = 0;
         unsigned char type;
         float sec, speed = MIN_SPEED, jump_speed = -1.0f;

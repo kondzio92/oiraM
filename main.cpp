@@ -88,28 +88,25 @@ int main (int argc, char **argv) {
             }
 
 
-            for(int i=0; i<(int)shared.enemies.size(); i++){
-                Object *enemy = shared.enemies[i];
-
-            	enemy->execute();
-            	enemy->update();
-            	for(Object *object : shared.objects){
-                    if(enemy->colision(*object) & 7){ //any vertical collision (right or left), or bottom
-                        if(object->type == ObjectType::Player) {
-                            if(!shared.game_over) {
-                                theme.stop();
-                                gameover.play();
+            for(Object *enemy: shared.enemies)
+                if(!enemy->killed) {
+                    enemy->execute();
+                    enemy->update();
+                    for(Object *object : shared.objects) {
+                        if(enemy->colision(*object) & 7){ //any vertical collision (right or left), or bottom
+                            if(object->type == ObjectType::Player) {
+                                if(!shared.game_over) {
+                                    theme.stop();
+                                    gameover.play();
+                                }
+                                shared.game_over = true;
                             }
-                            shared.game_over = true;
+                            enemy->reverseDirection();
                         }
-                        enemy->reverseDirection();
+                        if(object->type != ObjectType::Enemy && enemy->colision(*object) & 8)
+                            enemy->killed = true;
                     }
-                    /*if(enemy->colision(*object) & 8) {
-                        shared.enemies.erase(shared.enemies.begin() + i);
-                        i--;
-                    }*/
-            	}
-            }
+                }
 
             if(!shared.game_over && player.getPosition().x < window.getViewCenter().x - window.view.getSize().x/4 &&
             	fabs(player.getPosition().x - castle.getPosition().x) > 100.0f){

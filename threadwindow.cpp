@@ -148,7 +148,8 @@ void ThreadWindow::main(){
                             break;
                     }
                 }
-                window->draw(o->sprite);
+                if(!o->killed)
+                    window->draw(o->sprite);
             }
             if(shared->win) {
                 this->text.setColor(sf::Color::Green);
