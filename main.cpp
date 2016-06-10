@@ -103,7 +103,7 @@ int main (int argc, char **argv) {
                             }
                             enemy->reverseDirection();
                         }
-                        if(object->type != ObjectType::Enemy && enemy->colision(*object) & 8)
+                        if(object->type == ObjectType::Player && enemy->colision(*object) & 8)
                             enemy->killed = true;
                     }
                 }
