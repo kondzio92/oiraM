@@ -3,8 +3,10 @@
 #include <cstring> 
 #include <cmath>
 #include <cerrno>
+#include <iostream>
 #include <vector>
 #include <SFML/System.hpp>
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include "headers.hpp"
 #include "object.hpp"
@@ -20,6 +22,7 @@ int main (int argc, char **argv) {
 #endif
     char move=0;
     sf::Vector2f finish;
+    sf::Music theme, win, gameover;
     Shared shared;
     Object player(ObjectType::Player), castle(ObjectType::Castle);
 
@@ -30,9 +33,24 @@ int main (int argc, char **argv) {
     shared.bg_objects.push_back(&castle);
     shared.game_state = 1; // start screen - main menu or game
 
+    if(!theme.openFromFile(M_THEME_PATH)) {
+        std::cerr<<"ERROR: Cannot load '"<<M_THEME_PATH<<"' image"<<std::endl;
+        return 1;
+    }
+    theme.setLoop(true);
+    if(!win.openFromFile(M_WIN_PATH)) {
+        std::cerr<<"ERROR: Cannot load '"<<M_WIN_PATH<<"' image"<<std::endl;
+        return 1;
+    }
+    if(!gameover.openFromFile(M_DEAD_PATH)) {
+        std::cerr<<"ERROR: Cannot load '"<<M_DEAD_PATH<<"' image"<<std::endl;
+        return 1;
+    }
+
     ThreadWindow window(WIDTH, HEIGHT, "oiraM", &shared);
 
     while(!window.isOpen());
+    theme.play();
     player.startFalling();
     while(window.isOpen()){
         if(!shared.win && shared.game_state == 1) { //game
@@ -61,25 +79,36 @@ int main (int argc, char **argv) {
                 player.enableJump();
             }
 
-            if(player.execute())
+            if(player.execute()) {
+                if(!shared.game_over) {
+                    theme.stop();
+                    gameover.play();
+                }
                 shared.game_over = true;
+            }
 
-            int i=0;
-            for(Object *enemy : shared.enemies){
+
+            for(int i=0; i<(int)shared.enemies.size(); i++){
+                Object *enemy = shared.enemies[i];
+
             	enemy->execute();
             	enemy->update();
             	for(Object *object : shared.objects){
-            		if(enemy->colision(*object) & 7){ //any vertical collision (right or left), or bottom
-            			if(object->type==ObjectType::Player){
-            				shared.game_over = true;
-            			}
-            			enemy->reverseDirection();
-            		}
-            		if(enemy->colision(*object) & 8){
-            			shared.enemies.erase(shared.enemies.begin()+i, shared.enemies.begin()+i+1);
-            		}
+                    if(enemy->colision(*object) & 7){ //any vertical collision (right or left), or bottom
+                        if(object->type == ObjectType::Player) {
+                            if(!shared.game_over) {
+                                theme.stop();
+                                gameover.play();
+                            }
+                            shared.game_over = true;
+                        }
+                        enemy->reverseDirection();
+                    }
+                    /*if(enemy->colision(*object) & 8) {
+                        shared.enemies.erase(shared.enemies.begin() + i);
+                        i--;
+                    }*/
             	}
-            	i++;
             }
 
             if(!shared.game_over && player.getPosition().x < window.getViewCenter().x - window.view.getSize().x/4 &&
@@ -102,8 +131,13 @@ int main (int argc, char **argv) {
                 player.disableJump();
             player.update();
 
-            if(!shared.game_over && fabs(player.getPosition().x - castle.getPosition().x) < 3.0f && fabs(player.getPosition().y - castle.getPosition().y) < 3.0f)
+            if(!shared.game_over && fabs(player.getPosition().x - castle.getPosition().x) < 3.0f && fabs(player.getPosition().y - castle.getPosition().y) < 3.0f) {
+                if(!shared.win) {
+                    theme.stop();
+                    win.play();
+                }
                 shared.win = true;
+            }
 
         }else if(shared.game_state == 2) { // main menu screen
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){

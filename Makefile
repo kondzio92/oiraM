@@ -14,7 +14,7 @@ threadwindow:
 	$(CC) $(FLAGS) threadwindow.cpp -c $(SFML_LIBS) -lX11
 
 main: misc object threadwindow
-	$(CC) $(FLAGS) main.cpp misc.o object.o threadwindow.o -o oiraM $(SFML_LIBS) -lX11
+	$(CC) $(FLAGS) main.cpp misc.o object.o threadwindow.o -o oiraM $(SFML_LIBS) -lsfml-audio -lX11
 
 clean:
 	rm -f misc.o object.o threadwindow.o oiraM
